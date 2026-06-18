@@ -32,6 +32,36 @@
   --info-light: #d1ecf1;
 }
 
+/* Dark mode overrides */
+body.dark-mode {
+  --primary: #5c6bc0;
+  --primary-light: #8e99f3;
+  --primary-dark: #26418f;
+  --primary-text: #ffffff;
+
+  --secondary: #ffa040;
+  --secondary-light: #ffd180;
+  --secondary-dark: #c77800;
+  --secondary-text: #ffffff;
+
+  --background: #121212;
+  --surface: #1e1e1e;
+  --text-primary: #e0e0e0;
+  --text-secondary: #aaaaaa;
+  --border: #333333;
+  --border-light: #2a2a2a;
+  --border-focus: #555555;
+
+  --success: #4caf50;
+  --success-light: #1b3a1c;
+  --warning: #ffb74d;
+  --warning-light: #3a2a00;
+  --error: #ef5350;
+  --error-light: #3a1212;
+  --info: #4dd0e1;
+  --info-light: #003a40;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -617,6 +647,15 @@ footer {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Dark mode toggle button */
+#dark-mode-toggle {
+  font-size: 1rem;
+  padding: 4px 10px;
 }
 
 #user-status {
