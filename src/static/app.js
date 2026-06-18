@@ -597,6 +597,17 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
       </div>
+      <div class="share-section">
+        <button class="share-toggle-button" aria-label="Share this activity">
+          🔗 Share
+        </button>
+        <div class="share-menu hidden">
+          <a class="share-option" data-platform="copy" href="#" title="Copy link">📋 Copy Link</a>
+          <a class="share-option" data-platform="whatsapp" href="#" target="_blank" rel="noopener" title="Share on WhatsApp">💬 WhatsApp</a>
+          <a class="share-option" data-platform="twitter" href="#" target="_blank" rel="noopener" title="Share on X">𝕏 X</a>
+          <a class="share-option" data-platform="facebook" href="#" target="_blank" rel="noopener" title="Share on Facebook">📘 Facebook</a>
+        </div>
+      </div>
     `;
 
     // Add click handlers for delete buttons
@@ -615,8 +626,68 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // Add share button logic
+    const shareToggle = activityCard.querySelector(".share-toggle-button");
+    const shareMenu = activityCard.querySelector(".share-menu");
+
+    shareToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      // Close all other open share menus
+      document.querySelectorAll(".share-menu:not(.hidden)").forEach((menu) => {
+        if (menu !== shareMenu) menu.classList.add("hidden");
+      });
+      shareMenu.classList.toggle("hidden");
+    });
+
+    // Build share URLs when the menu opens
+    shareMenu.querySelectorAll(".share-option").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const platform = link.dataset.platform;
+        const pageUrl = window.location.href.split("?")[0];
+        const shareText = `Check out "${name}" at Mergington High School! ${details.description} Schedule: ${formattedSchedule}`;
+
+        if (platform === "copy") {
+          navigator.clipboard.writeText(pageUrl).then(() => {
+            link.textContent = "✅ Copied!";
+            setTimeout(() => {
+              link.textContent = "📋 Copy Link";
+            }, 2000);
+          });
+        } else if (platform === "whatsapp") {
+          window.open(
+            `https://wa.me/?text=${encodeURIComponent(shareText + " " + pageUrl)}`,
+            "_blank",
+            "noopener"
+          );
+          shareMenu.classList.add("hidden");
+        } else if (platform === "twitter") {
+          window.open(
+            `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`,
+            "_blank",
+            "noopener"
+          );
+          shareMenu.classList.add("hidden");
+        } else if (platform === "facebook") {
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent(shareText)}`,
+            "_blank",
+            "noopener"
+          );
+          shareMenu.classList.add("hidden");
+        }
+      });
+    });
+
     activitiesList.appendChild(activityCard);
   }
+
+  // Close any open share menus when clicking elsewhere on the page
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".share-menu:not(.hidden)").forEach((menu) => {
+      menu.classList.add("hidden");
+    });
+  });
 
   // Event listeners for search and filter
   searchInput.addEventListener("input", (event) => {
